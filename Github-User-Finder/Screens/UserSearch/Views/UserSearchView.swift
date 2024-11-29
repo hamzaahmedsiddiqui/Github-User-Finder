@@ -99,18 +99,3 @@ struct UserSearchView: View {
     }
 }
 
-#Preview {
-    let mockViewModel = UserSearchViewModel(userService: MockGitHubUserService())
-
-    UserSearchView(viewModel: mockViewModel)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.gray.opacity(0.1))
-        .previewLayout(.sizeThatFits)
-}
-
-// MARK: - Mock Service
-class MockGitHubUserService: GitHubUserServiceProtocol {
-    func fetchUser(username: String) async throws -> User {
-        return Constants.mockUser
-    }
-}

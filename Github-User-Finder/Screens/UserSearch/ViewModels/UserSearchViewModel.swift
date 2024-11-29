@@ -49,19 +49,19 @@ class UserSearchViewModel: ObservableObject {
     
     // MARK: - Search History
     
-    private func loadSearchHistory() {
+    func loadSearchHistory() {
         if let savedHistory = UserDefaults.standard.array(forKey: "SearchHistory") as? [String] {
             state.searchHistory = savedHistory
         }
     }
     
-    private func saveSearchHistory(searchText: String) {
+    func saveSearchHistory(searchText: String) {
         guard !state.searchHistory.contains(searchText) else { return }
         state.searchHistory.append(searchText)
         UserDefaults.standard.set(state.searchHistory, forKey: "SearchHistory")
     }
     
-    private func clearHistory() {
+    func clearHistory() {
         state.searchHistory.removeAll()
         UserDefaults.standard.removeObject(forKey: "SearchHistory")
     }

@@ -16,7 +16,7 @@ struct Github_User_FinderApp: App {
     }
     
     private var userSearchView: some View {
-        let viewModel = UserSearchViewFactory.makeViewModel(service: GitHubUserService())
-        return UserSearchViewFactory.makeView(viewModel: viewModel)
+        let viewModel = UserSearchViewFactory.createViewModel(service: GitHubUserService())
+        return UserSearchViewFactory.createView(viewModel: viewModel)
     }
 }

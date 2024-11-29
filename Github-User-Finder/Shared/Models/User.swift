@@ -13,7 +13,7 @@ struct User: Identifiable, Codable {
     let avatarURL: String?
     let htmlURL: String
     let name: String?
-    let blog: String
+    let blog: String?
     let location: String?
     let email: String?
     let bio: String?

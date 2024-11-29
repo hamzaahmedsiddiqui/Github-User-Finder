@@ -7,9 +7,14 @@
 
 import Foundation
 import Network
+protocol NetworkManagerProtocol {
+    func fetchData<T: Codable>(from endpoint: String,
+                               decodableType: T.Type,
+                               parameters: [String: String]?) async throws -> T
+}
 
-class NetworkManager {
-    static let shared = NetworkManager()
+class NetworkManager: NetworkManagerProtocol {
+    static var shared = NetworkManager()
     private init() {}
 
     // This is a generic function made for future use of other services in future
