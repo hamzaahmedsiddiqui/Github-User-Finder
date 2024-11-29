@@ -13,8 +13,8 @@ protocol GitHubUserServiceProtocol {
 }
 
 class GitHubUserService: GitHubUserServiceProtocol {
-  func fetchUser(username: String) async throws -> User {
-    let endpoint = Constants.baseURL + Constants.getUserEndpoint + username
-    return try await NetworkManager.shared.fetchData(from: endpoint, decodableType: User.self)
-  }
+    func fetchUser(username: String) async throws -> User {
+        let endpoint = Constants.baseURL + Constants.getUserEndpoint + username
+        return try await NetworkManager.shared.fetchData(from: endpoint, decodableType: User.self)
+    }
 }

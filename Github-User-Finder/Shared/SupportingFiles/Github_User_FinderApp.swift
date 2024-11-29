@@ -11,7 +11,12 @@ import SwiftUI
 struct Github_User_FinderApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            userSearchView
         }
+    }
+    
+    private var userSearchView: some View {
+        let viewModel = UserSearchViewFactory.makeViewModel(service: GitHubUserService())
+        return UserSearchViewFactory.makeView(viewModel: viewModel)
     }
 }
