@@ -13,39 +13,50 @@ struct SearchHistoryView: View {
     var onClearHistory: () -> Void
     
     var body: some View {
-        VStack(alignment: .leading) {
-            HStack {
-                Text("Recent Searches")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                Spacer()
-                Button(action: onClearHistory) {
-                    Text("Clear")
-                        .font(.subheadline)
-                        .foregroundColor(.red)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                header
+                
+                VStack(spacing: 8) {
+                    ForEach(searchHistory, id: \.self) { item in
+                        historyItem(item: item)
+                    }
                 }
             }
+            .padding(.vertical)
             .padding(.horizontal)
-            
-            ForEach(searchHistory, id: \.self) { item in
-                Button(action: {
-                    onSelectItem(item)
-                }) {
-                    HStack {
-                        Image(systemName: "clock.fill")
-                            .foregroundColor(.white)
-                        Text(item)
-                            .foregroundColor(.white)
-                        Spacer()
-                    }
-                    .padding(.horizontal)
-                    .padding(.vertical, 8)
-                }
-                .background(Color.white.opacity(0.1))
-                .cornerRadius(8)
-                .padding(.horizontal)
+        }
+    }
+    
+    // MARK: - Header
+    private var header: some View {
+        HStack {
+            Text("Recent Searches")
+                .font(.headline)
+                .foregroundColor(.white)
+            Spacer()
+            Button(action: onClearHistory) {
+                Text("Clear History")
+                    .font(.subheadline)
+                    .foregroundColor(.red)
             }
         }
-        .padding(.vertical)
+    }
+    
+    // MARK: - History Item
+    private func historyItem(item: String) -> some View {
+        Button(action: { onSelectItem(item) }) {
+            HStack {
+                Image(systemName: "clock.fill")
+                    .foregroundColor(.white)
+                Text(item)
+                    .foregroundColor(.white)
+                Spacer()
+            }
+            .padding(.horizontal)
+            .padding(.vertical, 8)
+            .background(Color.white.opacity(0.1))
+            .cornerRadius(8)
+        }
     }
 }

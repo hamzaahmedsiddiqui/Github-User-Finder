@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct UserSearchView: View {
-    @State private var searchText: String = ""
+    @State private var searchText = ""
     @FocusState private var isTextFieldFocused: Bool
     @StateObject var viewModel: UserSearchViewModel
     
@@ -16,32 +16,24 @@ struct UserSearchView: View {
         NavigationStack {
             VStack(spacing: 20) {
                 title
-                searchView
-                userCardView
-                historyView
+                searchSection
+                userCardSection
+                historySection
                 Spacer()
             }
             .padding()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(
-                LinearGradient(
-                    gradient: Gradient(colors: [.blue.opacity(0.6), .purple.opacity(0.6)]),
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-                .ignoresSafeArea()
-            )
+            .background(BackgroundView())
             .animation(.easeInOut, value: viewModel.state.userTag)
-            .alert(isPresented: $viewModel.state.showAlert) {
-                Alert(
-                    title: Text("Error"),
-                    message: Text(viewModel.state.errorMessage),
-                    dismissButton: .default(Text("OK"))
-                )
+            .alert("Error", isPresented: $viewModel.state.showAlert) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(viewModel.state.errorMessage)
             }
         }
     }
     
+    // MARK: - Title
     private var title: some View {
         Text("GitHub User Finder")
             .font(.largeTitle)
@@ -50,12 +42,49 @@ struct UserSearchView: View {
             .shadow(radius: 5)
     }
     
-    private func clearSearch() {
-        searchText.removeAll()
+    // MARK: - Search Section
+    private var searchSection: some View {
+        VStack(spacing: 8) {
+            searchBar
+            searchButton
+        }
     }
     
+    private var searchBar: some View {
+        SearchBar(
+            searchText: $searchText,
+            isTextFieldFocused: _isTextFieldFocused,
+            onSubmit: { viewModel.trigger(.search(username: searchText)) },
+            clearSearch: { searchText.removeAll() }
+        )
+    }
+    
+    private var searchButton: some View {
+        Button("Search") {
+            viewModel.trigger(.search(username: searchText))
+        }
+        .customButtonStyle()
+    }
+    
+    // MARK: - User Card Section
     @ViewBuilder
-    private var historyView: some View {
+    private var userCardSection: some View {
+        if let vm = viewModel.state.userDetailViewModel {
+            NavigationLink(destination: UserDetailView(viewModel: vm)) {
+                UserCardView(
+                    avatarURL: viewModel.state.avatar,
+                    name: viewModel.state.name,
+                    userTag: viewModel.state.userTag
+                )
+            }
+            .buttonStyle(PlainButtonStyle())
+            .transition(.move(edge: .bottom))
+        }
+    }
+    
+    // MARK: - History Section
+    @ViewBuilder
+    private var historySection: some View {
         if !viewModel.state.searchHistory.isEmpty {
             SearchHistoryView(
                 searchHistory: viewModel.state.searchHistory,
@@ -63,69 +92,25 @@ struct UserSearchView: View {
                     searchText = item
                     viewModel.trigger(.search(username: item))
                 },
-                onClearHistory: {
-                    viewModel.trigger(.didTapOnClearHistory)
-                }
+                onClearHistory: { viewModel.trigger(.didTapOnClearHistory) }
             )
             .transition(.opacity)
         }
     }
-    
-    @ViewBuilder
-    private var userCardView: some View {
-        if let vm = viewModel.state.userDetailViewModel {
-            NavigationLink(
-                destination: UserDetailView(viewModel: vm),
-                label: {
-                    UserCardView(
-                        avatarURL: viewModel.state.avatar,
-                        name: viewModel.state.name,
-                        userTag: viewModel.state.userTag
-                    )
-                }
-            )
-            .buttonStyle(PlainButtonStyle())
-            .transition(.move(edge: .bottom))
-        }
-    }
-    
-    private var searchButton: some View {
-        Text("Search")
-            .fontWeight(.semibold)
-            .foregroundColor(.white)
-            .frame(maxWidth: .infinity)
-            .padding()
-            .background(LinearGradient(
-                gradient: Gradient(colors: [.purple, .blue]),
-                startPoint: .leading,
-                endPoint: .trailing
-            ))
-            .cornerRadius(8)
-            .shadow(radius: 5)
-    }
-    
-    private var searchBar: some View {
-        SearchBar(
-            searchText: $searchText,
-            isTextFieldFocused: _isTextFieldFocused,
-            onSubmit: {
-                viewModel.trigger(.search(username: searchText))
-            },
-            clearSearch: clearSearch
-        )
-    }
-    
-    private var searchView: some View {
-        VStack {
-            searchBar
-            searchButton
-                .onTapGesture {
-                    viewModel.trigger(.search(username: searchText))
-                }
-        }
-    }
 }
 
-//#Preview {
-//  UserSearchView()
-//}
+#Preview {
+    let mockViewModel = UserSearchViewModel(userService: MockGitHubUserService())
+
+    UserSearchView(viewModel: mockViewModel)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.gray.opacity(0.1))
+        .previewLayout(.sizeThatFits)
+}
+
+// MARK: - Mock Service
+class MockGitHubUserService: GitHubUserServiceProtocol {
+    func fetchUser(username: String) async throws -> User {
+        return Constants.mockUser
+    }
+}

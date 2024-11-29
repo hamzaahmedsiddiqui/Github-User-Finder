@@ -8,11 +8,15 @@
 import SwiftUI
 
 struct BackgroundView: View {
+    var firstColor: Color = .purple
+    var secondColor: Color = .blue
+    var startPoint: UnitPoint = .topLeading
+    var endPoint: UnitPoint = .trailing
     var body: some View {
         LinearGradient(
-            gradient: Gradient(colors: [Color.teal, Color(UIColor.systemGray2)]),
-            startPoint: .top,
-            endPoint: .bottom
+            gradient: Gradient(colors: [firstColor, secondColor]),
+            startPoint: startPoint,
+            endPoint:endPoint
         ).ignoresSafeArea()
     }
 }

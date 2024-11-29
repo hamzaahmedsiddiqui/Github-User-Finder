@@ -12,7 +12,7 @@ struct UserDetailView: View {
     
     var body: some View {
         ScrollView {
-            VStack {
+            VStack(spacing: .padding) {
                 imageView
                 descriptionView
                 repositoryDescriptionView
@@ -21,13 +21,12 @@ struct UserDetailView: View {
             }
         }
         .padding(.vertical, .padding)
-        .background {
-            BackgroundView()
-        }
+        .background(BackgroundView())
         .navigationTitle("User Details")
         .toolbarRole(.editor)
     }
     
+    // MARK: - Image View
     @ViewBuilder
     private var imageView: some View {
         if let avatarURL = viewModel.state.avatar {
@@ -35,89 +34,75 @@ struct UserDetailView: View {
         }
     }
     
+    // MARK: - Description View
     private var descriptionView: some View {
         VStack(alignment: .leading, spacing: .padding) {
             if let name = viewModel.state.name {
                 Text(name)
                     .multilineTextAlignment(.leading)
                     .customTextStyle(
-                        font: .system(
-                            size: 30,
-                            weight: .bold
-                        ),
+                        font: .system(size: 30, weight: .bold),
                         foregroundColor: .primary
                     )
             }
             
             Text(viewModel.state.userTag)
-                .customTextStyle(
-                    font: .title2,
-                    foregroundColor: .black
-                )
+                .customTextStyle(font: .title2, foregroundColor: .black)
             
-            if let description = viewModel.state.description {
-                Text(description)
-                    .customTextStyle(
-                        font: .body,
-                        foregroundColor: .secondary
-                    )
+            if let bio = viewModel.state.bio {
+                Text(bio)
+                    .customTextStyle(font: .body, foregroundColor: .black)
             }
             
-            if let locationDescription = viewModel.state.location {
+            if let location = viewModel.state.location {
                 HStack {
                     Image(systemName: "mappin.and.ellipse")
-                        .foregroundColor(.blue)
-                    Text(locationDescription)
-                        .customTextStyle(
-                            font: .body,
-                            foregroundColor: .secondary
-                        )
+                        .foregroundColor(.black)
+                    Text(location)
+                        .customTextStyle(font: .body, foregroundColor: .primary)
                 }
             }
         }
-        .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+        .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.padding)
-        
     }
     
+    // MARK: - Repository Description View
     private var repositoryDescriptionView: some View {
-        VStack(spacing: .padding) {
-            HStack {
-                Text("Repositories: \(viewModel.state.repositoryCount ?? 0)")
-                Text("Followers: \(viewModel.state.followers ?? 0)")
-                Text("Following: \(viewModel.state.following ?? 0)")
-            }
-            .customTextStyle(font: .body, foregroundColor: .primary)
-            .foregroundColor(.primary)
-            .padding(.padding)
+        HStack(spacing: .padding) {
+            Text("Repositories: \(viewModel.state.repositoryCount ?? 0)")
+            Text("Followers: \(viewModel.state.followers ?? 0)")
+            Text("Following: \(viewModel.state.following ?? 0)")
         }
-        .frame(alignment: .leading)
+        .customTextStyle(font: .body, foregroundColor: .primary)
     }
     
+    // MARK: - CTA Views
     @ViewBuilder
     private var profileCTAView: some View {
         if let url = URL(string: viewModel.state.profileURL ?? "") {
-            ctaView(description: "View Profile on GitHub", url: url)
+            ctaView(description: "View Profile on GitHub", url: url, systemImage: "person.circle")
         }
     }
     
     @ViewBuilder
     private var blogCTAView: some View {
-        if let url = URL(string: viewModel.state.blogURL ?? "") {
-            ctaView(description: "View Profile on GitHub", url: url)
+        if let blogURL = viewModel.state.blogURL, let url = URL(string: blogURL) {
+            ctaView(description: "Visit Blog", url: url, systemImage: "link")
         }
     }
     
-    private func ctaView(description: String, url: URL) -> some View {
-        Link(description, destination: url)
-            .font(.body)
-            .foregroundColor(.blue)
-            .customButtonStyle()
-            .padding(.padding)
+    private func ctaView(description: String, url: URL, systemImage: String) -> some View {
+        Link(destination: url) {
+            Label(description, systemImage: systemImage)
+                .font(.body)
+                .foregroundColor(.white)
+                .customButtonStyle()
+        }
     }
 }
 
-
+// MARK: - Constants
 fileprivate extension CGFloat {
     static let padding: CGFloat = 8
 }

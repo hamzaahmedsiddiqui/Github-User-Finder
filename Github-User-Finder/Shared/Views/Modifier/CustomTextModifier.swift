@@ -21,7 +21,6 @@ struct CustomTextModifier: ViewModifier {
             .multilineTextAlignment(alignment)
             .lineLimit(lineLimit)
         
-        // Apply frame if provided
         if let frame = frame {
             return AnyView(view.frame(width: frame.size.width, height: frame.size.height))
         } else {
@@ -30,8 +29,21 @@ struct CustomTextModifier: ViewModifier {
     }
 }
 
+
 extension View {
-    func customTextStyle(font: Font? = nil, foregroundColor: Color, alignment: TextAlignment = .leading, lineLimit: Int? = nil, frame: CGRect? = nil) -> some View {
-        self.modifier(CustomTextModifier(font: font, foregroundColor: foregroundColor, alignment: alignment, lineLimit: lineLimit, frame: frame))
+    func customTextStyle(
+        font: Font? = nil,
+        foregroundColor: Color,
+        alignment: TextAlignment = .leading,
+        lineLimit: Int? = nil,
+        frame: CGRect? = nil
+    ) -> some View {
+        self.modifier(CustomTextModifier(
+            font: font,
+            foregroundColor: foregroundColor,
+            alignment: alignment,
+            lineLimit: lineLimit,
+            frame: frame
+        ))
     }
 }

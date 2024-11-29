@@ -40,6 +40,5 @@ struct SearchBar: View {
                     onSubmit()
                 }
         }
-        .padding(.horizontal)
     }
 }

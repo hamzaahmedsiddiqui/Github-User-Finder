@@ -4,33 +4,33 @@
 //
 //  Created by hamza Ahmed on 2024-11-29.
 //
-
 import SwiftUI
 
-// Custom Button Style
+// Custom Button Style with Black and Gray Gradient and Shadow
 struct CustomButtonModifier: ButtonStyle {
-    var bgColor: Color = .teal
-    var textColor: Color = .white
-    var hasBorder: Bool = false
-    
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .foregroundColor(textColor)
             .padding()
             .frame(maxWidth: .infinity)
-            .background(Capsule().fill(bgColor))
-            .scaleEffect(configuration.isPressed ? 0.95 : 1)
-            .overlay {
-                hasBorder ?
+            .background(
                 Capsule()
-                    .stroke(.gray, lineWidth: 1) :
-                nil
-            }
+                    .fill(
+                        LinearGradient(
+                            colors: [.black, .gray],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+            )
+            .shadow(color: .gray.opacity(0.5), radius: 5, x: 0, y: 5) // Shadow effect
+            .scaleEffect(configuration.isPressed ? 0.95 : 1) // Press effect
+            .foregroundColor(.white) // Text color
     }
 }
 
+// View extension for applying the custom button style
 extension View {
-    func customButtonStyle(bgColor: Color = .teal, textColor: Color = .white, hasBorder: Bool = false) -> some View {
-        self.buttonStyle(CustomButtonModifier(bgColor: bgColor, textColor: textColor, hasBorder: hasBorder))
+    func customButtonStyle() -> some View {
+        self.buttonStyle(CustomButtonModifier())
     }
 }

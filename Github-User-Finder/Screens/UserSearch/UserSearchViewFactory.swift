@@ -6,13 +6,12 @@
 //
 
 import Foundation
-
 final class UserSearchViewFactory {
-    static func makeView(viewModel: UserSearchViewModel) -> UserSearchView {
+    static func createView(viewModel: UserSearchViewModel) -> UserSearchView {
         UserSearchView(viewModel: viewModel)
     }
     
-    static func makeViewModel(service: GitHubUserService) -> UserSearchViewModel {
+    static func createViewModel(service: GitHubUserService) -> UserSearchViewModel {
         UserSearchViewModel(userService: service)
     }
 }
