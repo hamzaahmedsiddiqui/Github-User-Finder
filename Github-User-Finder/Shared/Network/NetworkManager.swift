@@ -16,7 +16,7 @@ protocol NetworkManagerProtocol {
 class NetworkManager: NetworkManagerProtocol {
     static var shared = NetworkManager()
     private init() {}
-
+    
     // This is a generic function made for future use of other services in future
     func fetchData<T: Codable>(from endpoint: String,
                                decodableType: T.Type,
@@ -26,7 +26,7 @@ class NetworkManager: NetworkManagerProtocol {
         if !isConnectedToNetwork() {
             throw NetworkError.noInternetConnection
         }
-
+        
         var urlString = endpoint
         
         // Append query parameters if any, for future use

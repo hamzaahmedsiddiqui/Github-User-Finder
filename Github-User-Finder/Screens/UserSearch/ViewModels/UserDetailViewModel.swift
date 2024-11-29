@@ -21,7 +21,7 @@ struct UserDetailViewState {
         self.userTag = user.userTag
         self.avatar = user.avatarURL
         self.bio = user.bio
-        self.description = user.bio // Assuming this is a similar field (you can modify as needed)
+        self.description = user.bio 
         self.location = user.location
         self.followers = user.followers
         self.following = user.following
