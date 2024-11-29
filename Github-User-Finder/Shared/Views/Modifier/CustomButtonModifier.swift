@@ -22,9 +22,10 @@ struct CustomButtonModifier: ButtonStyle {
                         )
                     )
             )
-            .shadow(color: .gray.opacity(0.5), radius: 5, x: 0, y: 5)
+            .shadow(color: .gray.opacity(0.5), radius: 5, x: 0, y: 5) 
             .scaleEffect(configuration.isPressed ? 0.95 : 1)
             .foregroundColor(.white)
+    }
 }
 
 // View extension for applying the custom button style
