@@ -11,6 +11,7 @@ import SwiftUI
 struct Github_User_FinderApp: App {
     var body: some Scene {
         WindowGroup {
+            
             userSearchView
         }
     }
