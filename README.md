@@ -42,7 +42,7 @@ I followed the **SOLID principles** of object-oriented design, ensuring that the
 
 ## Testing
 
-Unit tests were written to verify the functionality of the app, focusing on the business logic and network calls. Due to time constraints, not all edge cases were covered, but the core functionality has been tested. With more time, additional test cases can be added to improve test coverage.
+Unit tests were written to verify the functionality of the app, focusing on the business logic and network calls. I also utilized **Combine** in some of the tests to demonstrate its use in handling asynchronous data streams and managing state updates. Due to time constraints, not all edge cases were covered, but the core functionality has been tested. With more time, additional test cases can be added to improve test coverage.
 
 ## Future Improvements
 
