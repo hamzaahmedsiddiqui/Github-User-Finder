@@ -13,7 +13,7 @@ protocol NetworkManagerProtocol {
                                parameters: [String: String]?) async throws -> T
 }
 
-class NetworkManager: NetworkManagerProtocol {
+final class NetworkManager: NetworkManagerProtocol {
     static var shared = NetworkManager()
     private init() {}
     

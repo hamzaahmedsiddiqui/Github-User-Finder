@@ -30,7 +30,7 @@ struct UserSearchView: View {
             } message: {
                 Text(viewModel.state.errorMessage)
             }
-        }
+        }.tint(.black)
     }
     
     // MARK: - Title
