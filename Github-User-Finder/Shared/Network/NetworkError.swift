@@ -37,7 +37,7 @@ enum NetworkError: Error, LocalizedError {
         case .serverError:
             return "The server encountered an error. Please try again later."
         case .noInternetConnection:
-            return "No internet connection. Please check your network settings."
+            return "Please check your network settings and try again."
         }
     }
 }

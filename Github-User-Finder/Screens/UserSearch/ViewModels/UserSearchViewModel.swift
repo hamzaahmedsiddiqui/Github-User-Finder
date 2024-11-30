@@ -23,7 +23,7 @@ enum UserSearchViewAction {
     case didTapOnClearHistory
 }
 
-class UserSearchViewModel: ObservableObject {
+final class UserSearchViewModel: ObservableObject {
     @Published var state: UserSearchViewState
     private var userService: GitHubUserServiceProtocol
     
@@ -49,19 +49,19 @@ class UserSearchViewModel: ObservableObject {
     
     // MARK: - Search History
     
-    func loadSearchHistory() {
+    private func loadSearchHistory() {
         if let savedHistory = UserDefaults.standard.array(forKey: "SearchHistory") as? [String] {
             state.searchHistory = savedHistory
         }
     }
     
-    func saveSearchHistory(searchText: String) {
+    private func saveSearchHistory(searchText: String) {
         guard !state.searchHistory.contains(searchText) else { return }
         state.searchHistory.append(searchText)
         UserDefaults.standard.set(state.searchHistory, forKey: "SearchHistory")
     }
     
-    func clearHistory() {
+    private func clearHistory() {
         state.searchHistory.removeAll()
         UserDefaults.standard.removeObject(forKey: "SearchHistory")
     }
@@ -70,19 +70,20 @@ class UserSearchViewModel: ObservableObject {
     // MARK: - User Fetching
     private func fetchUser(searchText: String) {
         if searchText != "" {
-            Task {
+            Task { [weak self] in
+                guard let self = self else { return }
                 do {
-                    let fetchedUser = try await userService.fetchUser(username: searchText)
+                    let fetchedUser = try await self.userService.fetchUser(username: searchText)
                     await MainActor.run {
-                        setUser(user: fetchedUser)
-                        saveSearchHistory(searchText: searchText)
+                        self.setUser(user: fetchedUser)
+                        self.saveSearchHistory(searchText: searchText)
                     }
                 } catch let error as NetworkError {
                     await MainActor.run {
-                        resetUserState()
-                        saveSearchHistory(searchText: searchText)
-                        state.showAlert = true
-                        state.errorMessage = error.errorDescription
+                        self.resetUserState()
+                        self.saveSearchHistory(searchText: searchText) // might make sense to save history only on successful fetches but as per requirement it is saving 
+                        self.state.showAlert = true
+                        self.state.errorMessage = error.errorDescription
                     }
                 }
             }
@@ -100,9 +101,6 @@ class UserSearchViewModel: ObservableObject {
     }
     
     private func resetUserState() {
-        self.state.name = ""
-        self.state.userTag = ""
-        self.state.avatar = ""
-        self.state.userDetailViewModel = nil
+        self.state = UserSearchViewState()
     }
 }

@@ -9,15 +9,11 @@ import SwiftUI
 
 @main
 struct Github_User_FinderApp: App {
+    @StateObject private var viewModel = UserSearchViewFactory.createViewModel(service: GitHubUserService())
+    // @stateObject wrapper is used here because it won’t recreate the viewModel every time the view is updated
     var body: some Scene {
         WindowGroup {
-            
-            userSearchView
+            UserSearchViewFactory.createView(viewModel: viewModel)
         }
-    }
-    
-    private var userSearchView: some View {
-        let viewModel = UserSearchViewFactory.createViewModel(service: GitHubUserService())
-        return UserSearchViewFactory.createView(viewModel: viewModel)
     }
 }

@@ -10,7 +10,6 @@ struct UserDetailViewState {
     var userTag: String
     var avatar: String?
     var bio: String?
-    var description: String?
     var location: String?
     var followers, following, repositoryCount: Int?
     var profileURL: String?
@@ -21,7 +20,6 @@ struct UserDetailViewState {
         self.userTag = user.userTag
         self.avatar = user.avatarURL
         self.bio = user.bio
-        self.description = user.bio 
         self.location = user.location
         self.followers = user.followers
         self.following = user.following
@@ -31,7 +29,7 @@ struct UserDetailViewState {
     }
 }
 
-class UserDetailViewModel: ObservableObject {
+final class UserDetailViewModel: ObservableObject {
     @Published var state: UserDetailViewState
 
     init(user: User) {
